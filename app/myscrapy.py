@@ -1,5 +1,6 @@
 print('*' * 20)
-import asyncio
+
+from tasks import *
 
 from soup import Crawler
 

@@ -11,4 +11,4 @@ RUN pip install -r /code/requirements/development.txt
 
 ADD . /code/
 
-CMD [ "python", "/code/app/myscrapy.py" ]
+ENTRYPOINT celery -A app worker --loglevel=info
