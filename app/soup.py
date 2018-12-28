@@ -6,15 +6,34 @@ from urllib.parse import urlparse
 
 
 class Crawler(object):
+    REGEX_URL = re.compile(r'^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$')
 
     def get_soup(self, url):
         contents = requests.get(url).content
         soup = BeautifulSoup(contents, 'html.parser')
         return soup
 
+    def format_link(self, link, parse_url):
+        href = link.get('href')
+
+        if self.REGEX_URL.match(href):
+            if re.search(parse_url.netloc, href):
+                return href
+
+        # abs
+        return parse_url.scheme + '://' + parse_url.netloc + href
+
     def get_links(self, url):
         soup = self.get_soup(url)
-        links = [link.get('href') for link in soup.findAll('a', attrs={'href': re.compile("/")})]
+        parse_url = urlparse(url)
+
+        links = list()
+
+        for link in soup.findAll('a', attrs={'href': re.compile("/")}):
+            _formated_link = self.format_link(link, parse_url)
+            if _formated_link:
+                links.append(_formated_link)
+
         return links
 
     def get_data(self, url):
