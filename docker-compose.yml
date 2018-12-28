@@ -18,8 +18,14 @@ services:
             - rabbit
         depends_on:
             - rabbit
+        command: python3 myscrapy.py
+
     database:
         hostname: mongo
         image: mongo:latest
         ports:
-            - "27018:27017"
+            - "27018:27018"
+        volumes:
+          - data-volume:/data/db
+volumes:
+  data-volume:
