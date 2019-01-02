@@ -8,6 +8,12 @@ services:
             - RABBITMQ_DEFAULT_PASS=password
         ports:
             - "5672:5672"
+    redis:
+      container_name: redis
+      image: redis:4.0.1-alpine
+      ports:
+        - "6379"
+
     worker:
         build:
             context: .
@@ -16,16 +22,8 @@ services:
             - .:/app
         links:
             - rabbit
+            - redis
         depends_on:
             - rabbit
+            - redis
         command: python3 myscrapy.py
-
-    database:
-        hostname: mongo
-        image: mongo:latest
-        ports:
-            - "27018:27018"
-        volumes:
-          - data-volume:/data/db
-volumes:
-  data-volume:

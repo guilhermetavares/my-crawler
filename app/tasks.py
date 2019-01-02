@@ -1,13 +1,22 @@
 from __future__ import absolute_import
-from app.celery import app
+
+import os
 import time, requests
-from pymongo import MongoClient
 
+from app.celery import app
+from app.soup import Crawler
+from app.cache_walrus import get_visited_links
 
-client = MongoClient('mongo', 27018)
-
-print('*' * 100)
 
 @app.task
-def longtime_add(self, i):
-    print('long time task begins', i)
+def tasks_process_url(url):
+
+    if url in get_visited_links():
+        return
+
+    crawler = Crawler()
+    links = crawler.get_links(url)
+
+@app.task
+def process_detail_url(url):
+    visited_links = cache.get('')

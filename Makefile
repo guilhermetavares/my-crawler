@@ -9,3 +9,6 @@ run:
 
 up:
 	docker-compose --file docker-compose.yml up
+
+bash:
+	docker exec -it mycrawler_worker_1 bash
