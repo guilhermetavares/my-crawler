@@ -30,17 +30,7 @@ class Crawler(object):
         # abs
         return parse_url.scheme + '://' + parse_url.netloc + href
 
-
     def get_links(self, url):
-
-        # if self.REGEX_URL.match(url):
-        #     return []
-        #
-        if url in self.VISITED_URLS:
-            return []
-
-        self.VISITED_URLS.append(url)
-        print('get_links', url)
 
         soup = self.get_soup(url)
         if soup is None:
@@ -52,22 +42,16 @@ class Crawler(object):
         for link in soup.findAll('a', attrs={'href': re.compile("/")}):
             _formated_link = self.format_link(link, parse_url)
 
-
-            if _formated_link and _formated_link in self.VISITED_URLS:
-                continue
-
             if _formated_link:
-
-                if self.assert_product_link(_formated_link):
-                    links.append(_formated_link)
-                    continue
-
-                links += self.get_links(_formated_link)
+                links.append(_formated_link)
 
         return links
 
 
     def get_data(self, url):
+
+        if not self.assert_product_link(url):
+            return {}
 
         soup = self.get_soup(url)
 

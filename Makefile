@@ -12,3 +12,6 @@ up:
 
 bash:
 	docker exec -it mycrawler_worker_1 bash
+
+down:
+	docker-compose --file docker-compose.yml down

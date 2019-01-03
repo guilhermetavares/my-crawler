@@ -1,22 +1,20 @@
 print('*' * 20)
 
-from app.tasks import longtime_add
+from app.tasks import longtime_add, tasks_process_url
 from app.soup import Crawler
 
-url_ = 'https://www.epocacosmeticos.com.br/cabelos#5'
+url_ = 'https://www.epocacosmeticos.com.br/'
 
-longtime_add.delay(None, 1)
-longtime_add.delay(None, 2)
-longtime_add.delay(None, 3)
+tasks_process_url.delay(url_)
 
-crawler = Crawler()
-links = crawler.get_links(url_)
-ALREADY_URL = [
-    url_,
-]
-
-for l in links:
-    print(l)
+# crawler = Crawler()
+# links = crawler.get_links(url_)
+# ALREADY_URL = [
+#     url_,
+# ]
+#
+# for l in links:
+#     print(l)
 
 # for href in links:
 #
