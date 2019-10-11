@@ -7,8 +7,6 @@ from slugify import slugify
 
 from app.celery import app
 from app.soup import Crawler
-from app.cache_walrus import set_item_data, get_visited_links, \
-    append_visited_links, pop_processing
 
 
 crawler = Crawler()
@@ -19,26 +17,21 @@ def tasks_process_url(url):
     print('url')
     print('tasks_process_url', slugify(url))
 
-    if url in get_visited_links():
-        return
-
     links = crawler.get_links(url)
 
-    append_visited_links(url)
-
     if links:
-        for link in links:
+        for link in set(links):
             tasks_process_url.delay(link)
         process_detail_url.delay()
 
 
 @app.task
 def process_detail_url():
-    link = pop_processing()
+    link = crawler.pop()
 
     if link:
         data = crawler.get_data(link)
-        set_item_data(data)
+        crawler.save(data)
         process_detail_url.delay()
     else:
         # process

@@ -13,5 +13,8 @@ up:
 bash:
 	docker exec -it mycrawler_worker_1 bash
 
+echo:
+	docker exec -ti mycrawler_worker_1 sh -c "echo a && echo b"
+
 down:
 	docker-compose --file docker-compose.yml down

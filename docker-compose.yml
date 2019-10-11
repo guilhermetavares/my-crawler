@@ -1,13 +1,5 @@
 version: '2'
 services:
-    rabbit:
-        hostname: rabbit
-        image: rabbitmq:latest
-        environment:
-            - RABBITMQ_DEFAULT_USER=admin
-            - RABBITMQ_DEFAULT_PASS=password
-        ports:
-            - "5672:5672"
     redis:
       container_name: redis
       image: redis:4.0.1-alpine
@@ -21,9 +13,7 @@ services:
         volumes:
             - .:/app
         links:
-            - rabbit
             - redis
         depends_on:
-            - rabbit
             - redis
         command: python3 myscrapy.py
